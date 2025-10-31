@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schul Minecraft Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .server-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-label {
+            color: #999;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .rules-section {
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        .rules-section h2 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+
+        .rule-item {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border-left: 3px solid #ff6b6b;
+            font-size: 1em;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .player-card {
+            padding: 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .player-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .player-card.banned {
+            background: rgba(255, 107, 107, 0.15);
+            border: 2px solid #ff6b6b;
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .player-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .player-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .verweise-display {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .verweise-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .verweise-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .verweise-dot.active {
+            background: #ffd93d;
+            box-shadow: 0 0 15px rgba(255, 217, 61, 0.5);
+        }
+
+        .verweise-dot.active.critical {
+            background: #ff6b6b;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+        }
+
+        .ban-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .info-section {
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 25px;
+        }
+
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+
+        .info-section p {
+            line-height: 1.8;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #6BCF7F;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .server-info {
+                gap: 10px;
+            }
+
+            .info-item {
+                padding: 10px 15px;
+            }
+        }
+
+        .section-title {
+            color: #667eea;
+            margin: 30px 0 20px 0;
+            font-size: 1.8em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="glass">
+            <h1>⛏️ Schul Minecraft Server</h1>
+            <div class="server-info">
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value"><span class="status-indicator"></span>Online</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Gestartet</div>
+                    <div class="info-value">31.10.2025 - 15:20</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Spieler</div>
+                    <div class="info-value">15</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="rules-section glass">
+            <h2>⚠️ Server Regeln</h2>
+            <div class="rule-item">🚫 Kein Cheaten / Hacken</div>
+            <div class="rule-item">🤝 Respektvoller Umgang miteinander</div>
+            <div class="rule-item">🏗️ Kein Griefing (fremde Bauwerke zerstören)</div>
+            <div class="rule-item">💬 Keine Beleidigungen oder Spam im Chat</div>
+            <div class="rule-item">🔨 3 Verweise = Permanenter Bann</div>
+        </div>
+
+        <h2 class="section-title">👥 Spieler Übersicht</h2>
+        
+        <div class="players-grid" id="playersGrid"></div>
+
+        <div class="info-section glass">
+            <h2>ℹ️ Was sind Verweise?</h2>
+            <p>
+                <strong>Verweise</strong> sind offizielle Verwarnungen bei Regelverstößen. 
+                Jeder Verstoß gegen die Server-Regeln führt zu einem Verweis.
+            </p>
+            <p>
+                <strong>⚠️ WICHTIG:</strong> Bei 3 Verweisen erfolgt ein <strong>permanenter Bann</strong> vom Server! 
+                Halte dich an die Regeln, um weiter mitspielen zu können! 🎮
+            </p>
+            <p>
+                <strong>Verweisskala:</strong><br>
+                🟢 0 Verweise = Alles gut!<br>
+                🟡 1 Verweis = Erste Warnung<br>
+                🟠 2 Verweise = Letzte Warnung!<br>
+                🔴 3 Verweise = GEBANNT
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ===== HIER DIE VERWEISE ÄNDERN =====
+        const playerVerweise = {
+            'Leopold': 0,
+            'Erik': 0,
+            'Joseph': 0,
+            'Levi': 0,
+            'Moritz.M': 0,
+            'Nico': 0,
+            'Moritz.D': 0,
+            'Stefan': 0,
+            'Fabian': 0,
+            'Julian': 0,
+            'Robin': 0,
+            'Leo': 0,
+            'Eli': 0,
+            'Kaan': 0,
+            'Leon': 0
+        };
+        // ====================================
+
+        function getAvatar(name) {
+            return name.charAt(0).toUpperCase();
+        }
+
+        function renderPlayers() {
+            const grid = document.getElementById('playersGrid');
+            grid.innerHTML = Object.entries(playerVerweise).map(([player, verweise]) => {
+                const isBanned = verweise >= 3;
+                const dots = [0, 1, 2].map(i => {
+                    const active = i < verweise;
+                    const critical = i === 2 && active;
+                    return `<div class="verweise-dot ${active ? 'active' : ''} ${critical ? 'critical' : ''}"></div>`;
+                }).join('');
+
+                return `
+                    <div class="player-card glass ${isBanned ? 'banned' : ''}">
+                        <div class="player-header">
+                            <div class="player-avatar">${getAvatar(player)}</div>
+                            <div class="player-name">${player}</div>
+                        </div>
+                        <div class="verweise-display">
+                            <div style="color: #999; font-size: 0.9em; margin-bottom: 5px;">
+                                Verweise: ${verweise}/3
+                            </div>
+                            <div class="verweise-bar">
+                                ${dots}
+                            </div>
+                        </div>
+                        ${isBanned ? '<div class="ban-badge">🚫 GEBANNT</div>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        renderPlayers();
+    </script>
+</body>
+</html>
